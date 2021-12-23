@@ -3,12 +3,25 @@ import React, { useState } from 'react';
 const Button = ({ name, onClick }) => <button onClick={onClick}>{name}</button>
 
 const Anecdote = ({ text }) => <p>{text}</p>;
+
 const Vote = ({ votes }) => {
     if (votes > 0) {
         return (<p>Has {votes} votes.</p>);
     } else {
         return (<p>Has no votes.</p>);
     }
+};
+
+const BestAnecdote = ({ anecdotes, votes }) => {
+    const maximus = Math.max(...votes);
+    const maxIndex = votes.indexOf(maximus);
+    return (
+        <div>
+            <h2>Anecdote with most votes</h2>
+            <p>{anecdotes[maxIndex]}</p>
+            <Vote votes={votes[maxIndex]} />
+        </div>
+    );
 };
 
 
@@ -45,6 +58,7 @@ const App = () => {
             <Vote votes={votes[selected]} />
             <Button name='Vote' onClick={onVoteHandler} />
             <Button name='Next one' onClick={onNextHandler} />
+            <BestAnecdote anecdotes={anecdotes} votes={votes} />
         </div>
     );
 }
