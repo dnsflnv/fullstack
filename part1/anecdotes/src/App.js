@@ -3,6 +3,13 @@ import React, { useState } from 'react';
 const Button = ({ name, onClick }) => <button onClick={onClick}>{name}</button>
 
 const Anecdote = ({ text }) => <p>{text}</p>;
+const Vote = ({ votes }) => {
+    if (votes > 0) {
+        return (<p>Has {votes} votes.</p>);
+    } else {
+        return (<p>Has no votes.</p>);
+    }
+};
 
 
 const App = () => {
@@ -16,17 +23,28 @@ const App = () => {
         'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
     ];
 
-    const [selected, setSelected] = useState(0);
+    const defVotes = [0, 0, 0, 0, 0, 0, 0];
 
-    const onClickHandler = () => {
-        const rnd = Math.floor(Math.random() * (anecdotes.length - 1));
+    const [selected, setSelected] = useState(0);
+    const [votes, setVotes] = useState(defVotes);
+
+    const onNextHandler = () => {
+        const rnd = Math.floor(Math.random() * anecdotes.length);
         setSelected(rnd);
+    };
+
+    const onVoteHandler = () => {
+        const newVotes = [...votes];
+        newVotes[selected] += 1;
+        setVotes(newVotes);
     };
 
     return (
         <div>
             <Anecdote text={anecdotes[selected]} />
-            <Button name='Next one' onClick={onClickHandler} />
+            <Vote votes={votes[selected]} />
+            <Button name='Vote' onClick={onVoteHandler} />
+            <Button name='Next one' onClick={onNextHandler} />
         </div>
     );
 }
