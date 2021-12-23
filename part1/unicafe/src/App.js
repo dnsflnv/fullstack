@@ -7,7 +7,12 @@ const Button = ({ text, onClick }) => <button onClick={onClick}>{text}</button>;
 const StatisticLine = ({ text, number, isPersent }) => {
   let persent = '';
   if (isPersent === true) persent = '%';
-  return (<p>{text}: {number}{persent}</p>);
+  return (
+    <tr>
+      <td>{text}:</td>
+      <td>{number}{persent}</td>
+    </tr>
+  );
 };
 
 const Statistics = ({ good, neutral, bad }) => {
@@ -25,12 +30,16 @@ const Statistics = ({ good, neutral, bad }) => {
     return (
       <div>
         <h2>Statistics</h2>
-        <StatisticLine text='Good' number={good} />
-        <StatisticLine text='Neutral' number={neutral} />
-        <StatisticLine text='Bad' number={bad} />
-        <StatisticLine text='All' number={all} />
-        <StatisticLine text='Averange' number={averange} />
-        <StatisticLine text='Positive' number={positive} isPersent={true} />
+        <table>
+          <tbody>
+            <StatisticLine text='Good' number={good} />
+            <StatisticLine text='Neutral' number={neutral} />
+            <StatisticLine text='Bad' number={bad} />
+            <StatisticLine text='All' number={all} />
+            <StatisticLine text='Averange' number={averange} />
+            <StatisticLine text='Positive' number={positive} isPersent={true} />
+          </tbody>
+        </table>
       </div>
     );
   }
