@@ -4,6 +4,12 @@ const Header = ({ headerText }) => <h1>{headerText}</h1>;
 
 const Button = ({ text, onClick }) => <button onClick={onClick}>{text}</button>;
 
+const StatisticLine = ({ text, number, isPersent }) => {
+  let persent = '';
+  if (isPersent === true) persent = '%';
+  return (<p>{text}: {number}{persent}</p>);
+};
+
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
   let averange = 0;
@@ -19,12 +25,12 @@ const Statistics = ({ good, neutral, bad }) => {
     return (
       <div>
         <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>All: {all}</p>
-        <p>Averange: {averange}</p>
-        <p>Positive: {positive}%</p>
+        <StatisticLine text='Good' number={good} />
+        <StatisticLine text='Neutral' number={neutral} />
+        <StatisticLine text='Bad' number={bad} />
+        <StatisticLine text='All' number={all} />
+        <StatisticLine text='Averange' number={averange} />
+        <StatisticLine text='Positive' number={positive} isPersent={true} />
       </div>
     );
   }
@@ -58,9 +64,9 @@ const App = () => {
   return (
     <div>
       <Header headerText={'Give Feedback'} />
-      <Button text={'good'} onClick={handleGoodClick} />
-      <Button text={'neutral'} onClick={handleNeutralClick} />
-      <Button text={'bad'} onClick={handleBadClick} />
+      <Button text='good' onClick={handleGoodClick} />
+      <Button text='neutral' onClick={handleNeutralClick} />
+      <Button text='bad' onClick={handleBadClick} />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
