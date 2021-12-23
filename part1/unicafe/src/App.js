@@ -9,22 +9,33 @@ const Statistics = ({ good, neutral, bad }) => {
   let averange = 0;
   let positive = 0;
 
+  // Before 1.9, for avoid NaN, not needed now.
   if (all > 0) {
     averange = good / all - bad / all;
     positive = good * 100 / all;
   }
 
-  return (
-    <div>
-      <h2>Statistics</h2>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All: {all}</p>
-      <p>Averange: {averange}</p>
-      <p>Positive: {positive}%</p>
-    </div>
-  );
+  if (all !== 0) {
+    return (
+      <div>
+        <h2>Statistics</h2>
+        <p>Good: {good}</p>
+        <p>Neutral: {neutral}</p>
+        <p>Bad: {bad}</p>
+        <p>All: {all}</p>
+        <p>Averange: {averange}</p>
+        <p>Positive: {positive}%</p>
+      </div>
+    );
+  }
+  else {
+    return (
+      <div>
+        <h2>Statistics</h2>
+        <p>No feedback given.</p>
+      </div>
+    );
+  };
 };
 
 const App = () => {
