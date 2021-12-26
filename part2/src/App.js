@@ -25,10 +25,14 @@ const Content = ({ parts }) => {
 }
 
 const Total = ({ parts }) => {
-  let totalEx = 0;
-  parts.forEach(element => {
-    totalEx = totalEx + element.exercises;
-  });
+  // let totalEx = 0;
+  // parts.forEach(element => {
+  //   totalEx = totalEx + element.exercises;
+  // });
+  let initialVal = 0;
+  let totalEx = parts.reduce((s, p) => {
+    return s + p.exercises;
+  }, initialVal);
   return (
     <p><strong>Total of {totalEx} exercises</strong></p>
   );
