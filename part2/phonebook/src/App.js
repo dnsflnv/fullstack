@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import Filtrator from './components/Filtrator';
+import AddFormer from './components/AddFormer';
+import Numbers from './components/Numbers';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -38,28 +41,19 @@ const App = () => {
     setFilter(event.target.value);
   }
 
-  const personsToShow = !filter ? persons : persons.filter(person => person.name.match(RegExp(filter, 'i')));
+  const personsToShow = !filter
+    ? persons
+    : persons.filter(person => person.name.match(RegExp(filter, 'i')));
 
   return (
     <div>
       <h1>Phonebook</h1>
-      Filter shown with: <input value={filter} onChange={handleFilterChange} />
+      <Filtrator filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          Name: <input value={newName} onChange={handleNameChange} /><br />
-          Number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
+      <AddFormer addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
+        newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <ul>
-        {personsToShow.map(person =>
-          <li key={person.id}>{person.name}, {person.number}</li>
-        )}
-      </ul>
+      <Numbers personsToShow={personsToShow} />
     </div>
   );
 }
