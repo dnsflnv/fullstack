@@ -9,6 +9,7 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [filter, setFilter] = useState('');
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -33,9 +34,17 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  }
+
+  const personsToShow = !filter ? persons : persons.filter(person => person.name.match(RegExp(filter, 'i')));
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      Filter shown with: <input value={filter} onChange={handleFilterChange} />
+      <h2>Add new</h2>
       <form onSubmit={addPerson}>
         <div>
           Name: <input value={newName} onChange={handleNameChange} /><br />
@@ -47,8 +56,8 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person =>
-          <li key={person.id}>{person.name} {person.number}</li>
+        {personsToShow.map(person =>
+          <li key={person.id}>{person.name}, {person.number}</li>
         )}
       </ul>
     </div>
