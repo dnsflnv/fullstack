@@ -3,7 +3,7 @@ import axios from "axios";
 import Countries from "./components/Countries";
 import Filter from "./components/Filter";
 
-const API_URL = 'https://restcountries.com/v3.1/all';
+const COUNTRIES_API_URL = 'https://restcountries.com/v3.1/all';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get(API_URL)
+      .get(COUNTRIES_API_URL)
       .then(response => {
         setCountries(response.data)
       })
