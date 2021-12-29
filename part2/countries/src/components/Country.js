@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
 
 const WEATHER_API_KEY = process.env.REACT_APP_API_KEY;
 
 const Country = ({ country }) => {
-
-    const query = 'https://api.openweathermap.org/data/2.5/weather?q=' + country.capital + '&appid=' + WEATHER_API_KEY;
-    console.log(query);
-    let weather;
+    const [weather, setWeather] = useState(null);
+    const query = 'https://api.openweathermap.org/data/2.5/weather?q=' + country.capital
+        + '&appid=' + WEATHER_API_KEY + '&units=metric';
 
     useEffect(() => {
         axios
             .get(query)
             .then(response => {
-                weather = response.data;
-                console.log(weather);
+                console.log(response.data);
+                setWeather(response.data);
             })
+            .catch((error) => console.error(error));
     }, []);
 
     return (
@@ -30,7 +30,12 @@ const Country = ({ country }) => {
             </ul>
             <div className="flag">{country.flag}</div>
             <h2>Weather in {country.capital}</h2>
-            <p>{weather.name}</p>
+            {weather ?
+                <>
+                    <p>Temperature: {weather.main.temp} C</p>
+                    <p>Pressure: {weather.main.pressure} kPa</p>
+                    <p>Wind: {weather.wind.speed}, direction {weather.wind.deg}</p>
+                </> : <p>Loading...</p>}
 
         </div>
     );
