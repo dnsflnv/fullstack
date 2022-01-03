@@ -3,6 +3,7 @@ import Filtrator from './components/Filtrator';
 import AddFormer from './components/AddFormer';
 import Numbers from './components/Numbers';
 import axios from 'axios';
+import personsService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -23,8 +24,14 @@ const App = () => {
         name: newName,
         number: newNumber,
         id: persons.length + 1,
-      }
-      setPersons(persons.concat(newPerson));
+      };
+      personsService
+        .create(newPerson)
+        .then(retPerson => {
+          setPersons(persons.concat(retPerson));
+          setNewName('');
+          setNewNumber('');
+        });
     } else {
       alert(`${newName} is already added to phonebook`);
     }
