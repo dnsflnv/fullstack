@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Filtrator from './components/Filtrator';
 import AddFormer from './components/AddFormer';
 import Numbers from './components/Numbers';
-import axios from 'axios';
 import personsService from './services/persons';
 
 const App = () => {
@@ -54,12 +53,12 @@ const App = () => {
     : persons.filter(person => person.name.match(RegExp(filter, 'i')));
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }, [])
+    personsService
+      .getAll()
+      .then(initPersons => {
+        setPersons(initPersons);
+      });
+  }, []);
 
   return (
     <div>
