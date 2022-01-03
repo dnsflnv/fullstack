@@ -15,14 +15,21 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
 
+  function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+
   const addPerson = (event) => {
     event.preventDefault();
-    const result = persons.find(({ name }) => name === newName);
-    if (!result) {
+    const found = persons.find(({ name }) => name === newName);
+    if (!found) {
       const newPerson = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
+        id: uuidv4(),
+        //id: persons.length + 1,
       };
       personsService
         .create(newPerson)
@@ -31,13 +38,25 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         });
+    } else if (found && newNumber.length > 0) {
+      if (window.confirm(`${newName} is allready added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = { ...found, number: newNumber };
+        personsService.update(newPerson.id, newPerson);
+
+        const idx = persons.indexOf(found);
+        const newPersons = [...persons];
+        //newPersons[idx] = newPerson;
+        newPersons.splice(idx, 1, newPerson);
+        setPersons(newPersons);
+      }
     } else {
       alert(`${newName} is already added to phonebook`);
     }
   }
 
   const deleteCallback = (event) => {
-    const exId = parseInt(event.target.value, 10);
+    event.preventDefault();
+    const exId = event.target.value.toString();
     const exterminated = persons.find(p => p.id === exId);
     if (window.confirm(`Do you really want to delete ${exterminated.name}?`)) {
       personsService.exterminate(exId);
