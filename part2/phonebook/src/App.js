@@ -36,6 +36,16 @@ const App = () => {
     }
   }
 
+  const deleteCallback = (event) => {
+    const exId = parseInt(event.target.value, 10);
+    const exterminated = persons.find(p => p.id === exId);
+    if (window.confirm(`Do you really want to delete ${exterminated.name}?`)) {
+      personsService.exterminate(exId);
+      const newPersons = persons.filter((value) => { return value.id !== exId });
+      setPersons(newPersons);
+    }
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -46,7 +56,7 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-  }
+  };
 
   const personsToShow = !filter
     ? persons
@@ -68,7 +78,7 @@ const App = () => {
       <AddFormer addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
         newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Numbers personsToShow={personsToShow} />
+      <Numbers personsToShow={personsToShow} deleteCallback={deleteCallback} />
     </div>
   );
 }
