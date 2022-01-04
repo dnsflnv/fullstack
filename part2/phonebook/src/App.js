@@ -3,6 +3,7 @@ import Filtrator from './components/Filtrator';
 import AddFormer from './components/AddFormer';
 import Numbers from './components/Numbers';
 import personsService from './services/persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -14,6 +15,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState({ message: null, isError: false });
 
   function uuidv4() {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -37,6 +39,12 @@ const App = () => {
           setPersons(persons.concat(retPerson));
           setNewName('');
           setNewNumber('');
+          setErrorMessage(
+            { message: `Added ${retPerson.name}`, isError: false }
+          );
+          setTimeout(() => {
+            setErrorMessage({ message: null });
+          }, 2000);
         });
     } else if (found && newNumber.length > 0) {
       if (window.confirm(`${newName} is allready added to phonebook, replace the old number with a new one?`)) {
@@ -48,19 +56,30 @@ const App = () => {
         //newPersons[idx] = newPerson;
         newPersons.splice(idx, 1, newPerson);
         setPersons(newPersons);
+        setErrorMessage(
+          { message: `${newName} number changed`, isError: false }
+        );
+        setTimeout(() => {
+          setErrorMessage({ message: null });
+        }, 2000);
       }
     } else {
-      alert(`${newName} is already added to phonebook`);
+      setErrorMessage(
+        { message: `${newName} is already added to phonebook`, isError: true }
+      );
+      setTimeout(() => {
+        setErrorMessage({ message: null });
+      }, 2000);
     }
   }
 
-  const deleteCallback = (event) => {
+  const deletePerson = (event) => {
     event.preventDefault();
     const exId = event.target.value.toString();
-    const exterminated = persons.find(p => p.id === exId);
+    const exterminated = persons.find(p => p.id.toString() === exId);
     if (window.confirm(`Do you really want to delete ${exterminated.name}?`)) {
       personsService.exterminate(exId);
-      const newPersons = persons.filter((value) => { return value.id !== exId });
+      const newPersons = persons.filter((value) => { return value.id.toString() !== exId });
       setPersons(newPersons);
     }
   };
@@ -92,12 +111,13 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={errorMessage} />
       <Filtrator filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add new</h2>
       <AddFormer addPerson={addPerson} newName={newName} handleNameChange={handleNameChange}
         newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Numbers personsToShow={personsToShow} deleteCallback={deleteCallback} />
+      <Numbers personsToShow={personsToShow} deleteCallback={deletePerson} />
     </div>
   );
 }
