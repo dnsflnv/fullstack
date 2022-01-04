@@ -49,19 +49,33 @@ const App = () => {
     } else if (found && newNumber.length > 0) {
       if (window.confirm(`${newName} is allready added to phonebook, replace the old number with a new one?`)) {
         const newPerson = { ...found, number: newNumber };
-        personsService.update(newPerson.id, newPerson);
+        personsService
+          .update(newPerson.id, newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(prs => prs.id.toString() !== newPerson.id ? prs : returnedPerson));
+            // const idx = persons.indexOf(found);
+            // const newPersons = [...persons];
+            // newPersons.splice(idx, 1, newPerson);
+            // setPersons(newPersons);
+            setErrorMessage(
+              { message: `${newName} number changed`, isError: false }
+            );
+            setTimeout(() => {
+              setErrorMessage({ message: null });
+            }, 2000);
+          })
+          .catch(error => {
+            setErrorMessage({
+              message: `Person '${newName}' was already removed from server`,
+              isError: true,
+            });
+            setTimeout(() => {
+              setErrorMessage({ message: null })
+            }, 2000);
+            setPersons(persons.filter(p => p.id.toString() !== newPerson.id));
+          });
 
-        const idx = persons.indexOf(found);
-        const newPersons = [...persons];
-        //newPersons[idx] = newPerson;
-        newPersons.splice(idx, 1, newPerson);
-        setPersons(newPersons);
-        setErrorMessage(
-          { message: `${newName} number changed`, isError: false }
-        );
-        setTimeout(() => {
-          setErrorMessage({ message: null });
-        }, 2000);
+
       }
     } else {
       setErrorMessage(
